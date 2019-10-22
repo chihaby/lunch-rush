@@ -9,14 +9,37 @@ import './Application.css';
 class Application extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      CurrentUser: null
+    };
   }
 
-  render() {
+  componentDidMount () {
+    // currentUser (lower case c ) is just a random name. It can be any name
+    auth.onAuthStateChanged((currentUser) => {
+      console.log('AUTH_CHANGE', currentUser);
+      this.setState({currentUser});
+    });
+  }
+
+
+  render() { 
+    const { currentUser } = this.state;
     return (
       <div className="Application">
         <header className="Application--header">
           <h1>Lunch Rush</h1>
         </header>
+        <div>
+          {!currentUser && <SignIn />}
+          {
+            currentUser && 
+              <div>
+                <NewRestaurant />
+                <CurrentUser user={currentUser} />
+              </div>
+            }
+        </div>
       </div>
     );
   }
